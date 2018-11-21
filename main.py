@@ -8,18 +8,30 @@ def main():
     logTime('script begin')
     assert adb.hasDevice()
     logTime('hasDevice spends')
-
-    file = getScreenShot()
-    logTime('screenshot spends')
-    # screenSize = adb.getScreenSize()
-    screenSize = (1080, 1920)
+    screenSize = adb.getScreenSize()
     logTime('screensize spends')
-    positions = graphic.getHitPositions(file, screenSize=screenSize)
-    logTime('analysis hit positions spends')
-    graphic.drawDots(file, positions, targetFile='build/result.png')
-    logTime('drawDots spends')
-    cli.execute('open build/result.png', '.')
-    logTime('open result file spends')
+
+    beginTime = time.time()
+    currentTime, endTime = beginTime, beginTime + 20
+    while currentTime < endTime:
+        file = getScreenShot()
+        logTime('screenshot spends')
+        recordTime = time.time()
+
+        positions = graphic.getHitPositions(file, screenSize=screenSize)
+        logTime('analysis hit positions spends')
+        # graphic.drawDots(file, positions, targetFile='build/result.png')
+        # logTime('drawDots spends')
+        # cli.execute('open build/result.png', '.')
+        # logTime('open result file spends')
+
+        speed = 200
+        for pt in positions:
+            elapse = time.time() - recordTime
+            dy = elapse * speed
+            adb.tap(pt[0], pt[1] + dy)
+        currentTime = time.time()
+        logTime('finish one loop')
 
     logTime('done')
 
