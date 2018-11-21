@@ -1,0 +1,9 @@
+
+# common
+build/
+
+# vscode rocks !
+.vscode
+
+# python
+*.pyc
